@@ -1,11 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import BulkGeneration from '@/components/BulkGeneration';
-import { useRouter } from 'next/navigation';
 
 export default function BulkPage() {
-  const router = useRouter();
   const isPremium = true; // Make bulk generation free for everyone
 
   const handleUpgrade = () => {

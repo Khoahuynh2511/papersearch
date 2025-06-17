@@ -3,7 +3,6 @@
 import { useState, useCallback, useRef } from 'react';
 import { BulkGenerationRequest, BulkGenerationResponse } from '@/utils/types';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Upload, Download, FileText, AlertCircle, CheckCircle2 } from 'lucide-react';
@@ -273,7 +272,7 @@ const BulkGeneration: React.FC<BulkGenerationProps> = ({ isPremium, onUpgrade })
             <div className="mt-4">
               <Label>Hoặc nhập thủ công:</Label>
               <Textarea
-                placeholder="https://example1.com&#10;https://example2.com&#10;https://example3.com"
+                placeholder={"https://example1.com\nhttps://example2.com\nhttps://example3.com"}
                 rows={6}
                 onChange={(e) => handleManualInput(e.target.value)}
                 className="mt-2"
@@ -450,7 +449,7 @@ const BulkGeneration: React.FC<BulkGenerationProps> = ({ isPremium, onUpgrade })
           </div>
           
           <p className="text-xs text-gray-600 mt-3">
-            💡 Tip: Bấm "Tải tất cả" để tải hết hoặc bấm "Tải" cho từng QR code riêng lẻ
+             Tip: Bấm &quot;Tải tất cả&quot; để tải hết hoặc bấm Tải cho từng QR code riêng lẻ
           </p>
         </div>
       )}

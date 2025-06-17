@@ -12,7 +12,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useCallback, useEffect, useState } from 'react';
@@ -23,16 +22,7 @@ import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import LoadingDots from '@/components/ui/loadingdots';
 import downloadQrCode from '@/utils/downloadQrCode';
 import va from '@vercel/analytics';
-import { PromptSuggestion } from '@/components/PromptSuggestion';
-import { useRouter } from 'next/navigation';
 import { toast, Toaster } from 'react-hot-toast';
-
-const promptSuggestions = [
-  'Một thành phố hiện đại với những đám mây trắng',
-  'Dãy núi hùng vĩ với sương mù',
-  'Rừng tre xanh mướt phong cách Việt Nam',
-  'Biển Việt Nam hoàng hôn tuyệt đẹp',
-];
 
 const generateFormSchema = z.object({
   url: z.string().min(1),
@@ -42,13 +32,11 @@ type GenerateFormValues = z.infer<typeof generateFormSchema>;
 
 const Body = ({
   imageUrl,
-  prompt,
   redirectUrl,
   modelLatency,
   id,
 }: {
   imageUrl?: string;
-  prompt?: string;
   redirectUrl?: string;
   modelLatency?: number;
   id?: string;
@@ -57,8 +45,6 @@ const Body = ({
   const [error, setError] = useState<Error | null>(null);
   const [response, setResponse] = useState<QrGenerateResponse | null>(null);
   const [submittedURL, setSubmittedURL] = useState<string | null>(null);
-
-  const router = useRouter();
 
   const form = useForm<GenerateFormValues>({
     resolver: zodResolver(generateFormSchema),
@@ -82,8 +68,6 @@ const Body = ({
       form.setValue('url', redirectUrl);
     }
   }, [imageUrl, modelLatency, redirectUrl, id, form]);
-
-
 
   // Remove suggestion click handler as we don't have prompts anymore
 
@@ -130,7 +114,7 @@ const Body = ({
         setIsLoading(false);
       }
     },
-    [router],
+    [],
   );
 
   return (

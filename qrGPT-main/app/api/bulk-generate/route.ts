@@ -3,16 +3,7 @@ import { BulkGenerationRequest, BulkGenerationResponse } from '@/utils/types';
 import { qrCodeGenerator } from '@/utils/QRCodeGenerator';
 import { nanoid } from '@/utils/utils';
 
-// Simulate user subscription check
-const checkUserSubscription = async (userId?: string) => {
-  // In real app, this would check against database
-  return {
-    tier: 'business', // free, pro, business, enterprise
-    canUseBulkGeneration: true,
-    monthlyLimit: 500,
-    currentUsage: 50,
-  };
-};
+
 
 export async function POST(request: NextRequest) {
   try {

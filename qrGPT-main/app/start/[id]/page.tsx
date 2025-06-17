@@ -28,13 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function Results({
-  params,
-}: {
-  params: {
-    id: string;
-  };
-}) {
+export default async function Results() {
   // Redirect về trang chủ vì không cần lưu trữ
   redirect('/');
 }
