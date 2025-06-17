@@ -16,7 +16,6 @@ export class QRCodeGenerator {
     // QR code generation options
     const options: QRCode.QRCodeToDataURLOptions = {
       type: 'image/png' as const,
-      quality: 0.92,
       margin: 1,
       color: {
         dark: customization?.colorScheme?.foreground || '#000000',
@@ -44,7 +43,6 @@ export class QRCodeGenerator {
 
     const options: QRCode.QRCodeToBufferOptions = {
       type: 'png' as const,
-      quality: 0.92,
       margin: 1,
       color: {
         dark: customization?.colorScheme?.foreground || '#000000',
