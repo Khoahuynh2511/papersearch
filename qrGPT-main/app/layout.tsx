@@ -27,8 +27,10 @@ const inter = Inter({ subsets: ['latin'] });
 
 let title = 'VietQR - Tạo QR Code miễn phí';
 let description = 'Tạo QR Code đẹp mắt và có thể tùy chỉnh trong vài giây, hoàn toàn miễn phí';
-let url = 'https://www.vietqr.io';
-let ogimage = 'https://www.vietqr.io/og-image.png';
+let url = process.env.VERCEL_URL 
+  ? `https://${process.env.VERCEL_URL}` 
+  : 'https://qr-chi-lac.vercel.app';
+let ogimage = `${url}/og-image.png`;
 let sitename = 'VietQR.io';
 
 export const metadata: Metadata = {
