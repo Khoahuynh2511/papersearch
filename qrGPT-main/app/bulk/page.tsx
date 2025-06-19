@@ -1,21 +1,20 @@
-'use client';
+import dynamic from 'next/dynamic';
 
-import BulkGeneration from '@/components/BulkGeneration';
+// Lazy load BulkGeneration component với SSR enabled
+const DynamicBulkGeneration = dynamic(() => import('@/components/BulkGeneration'), {
+  loading: () => (
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+    </div>
+  ),
+  // ssr: false, // ✅ Bỏ dòng này để enable SSR
+});
 
 export default function BulkPage() {
-  const isPremium = true; // Make bulk generation free for everyone
-
-  const handleUpgrade = () => {
-    // No longer needed since bulk is free
-  };
-
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <BulkGeneration 
-          isPremium={isPremium}
-          onUpgrade={handleUpgrade}
-        />
+        <DynamicBulkGeneration />
       </div>
     </div>
   );

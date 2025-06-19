@@ -10,12 +10,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import LoadingDots from '@/components/ui/loadingdots';
 import downloadQrCode from '@/utils/downloadQrCode';
 
-interface BulkGenerationProps {
-  isPremium: boolean;
-  onUpgrade: () => void;
-}
-
-const BulkGeneration: React.FC<BulkGenerationProps> = ({ isPremium, onUpgrade }) => {
+const BulkGeneration: React.FC = () => {
   const [urls, setUrls] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -186,41 +181,7 @@ const BulkGeneration: React.FC<BulkGenerationProps> = ({ isPremium, onUpgrade })
     }
   }, [results]);
 
-  if (!isPremium) {
-    return (
-      <div className="p-8 border rounded-lg bg-gradient-to-br from-purple-50 to-blue-50">
-        <div className="text-center">
-          <Upload className="mx-auto h-16 w-16 text-purple-400 mb-6" />
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">
-            Bulk Generation
-          </h3>
-          <p className="text-gray-600 mb-6 max-w-md mx-auto">
-            Tạo hàng trăm QR code cùng lúc từ file CSV. Tiết kiệm thời gian và tăng hiệu quả làm việc.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-sm">
-            <div className="flex items-center gap-2 text-gray-600">
-              <CheckCircle2 className="h-4 w-4 text-green-500" />
-              Upload CSV file
-            </div>
-            <div className="flex items-center gap-2 text-gray-600">
-              <CheckCircle2 className="h-4 w-4 text-green-500" />
-              Batch processing
-            </div>
-            <div className="flex items-center gap-2 text-gray-600">
-              <CheckCircle2 className="h-4 w-4 text-green-500" />
-              Download ZIP
-            </div>
-          </div>
-          <Button 
-            onClick={onUpgrade}
-            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
-          >
-            Nâng cấp để sử dụng Bulk Generation
-          </Button>
-        </div>
-      </div>
-    );
-  }
+  // Bulk generation is now free for everyone, removed premium check
 
   return (
     <div className="space-y-8">

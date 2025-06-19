@@ -1,5 +1,3 @@
-'use client';
-
 import { Palette, Zap, Smartphone, DollarSign, Upload } from 'lucide-react';
 import VietnamFlag from './VietnamFlag';
 
