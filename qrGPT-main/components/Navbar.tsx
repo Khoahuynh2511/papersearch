@@ -4,25 +4,35 @@ import Link from 'next/link';
 import NavLink from './NavLink';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
 
-const Navbar = () => {
+export default function Navbar() {
   const [state, setState] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
   useEffect(() => {
     setIsClient(true);
-    // Add closing the navbar menu when navigating
-    const handleState = () => {
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+    
+    // Close navbar menu when navigating
+    const handleRouteChange = () => {
       document.body.classList.remove('overflow-hidden');
       setState(false);
     };
 
-    handleState();
-  }, [pathname, searchParams]);
+    // Listen for route changes
+    const handlePopState = () => {
+      handleRouteChange();
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [isClient]);
 
   const handleNavMenu = () => {
     setState(!state);
@@ -31,8 +41,39 @@ const Navbar = () => {
 
   const navigation = [
     { title: 'Trang chủ', path: '/' },
-    { title: 'Tạo hàng loạt', path: '/bulk' },
+    { title: 'Tạo QR', path: '/start' },
+    { title: 'Hàng loạt', path: '/bulk' },
   ];
+
+  // Tránh render khác nhau giữa server và client
+  if (!isClient) {
+    return (
+      <header className="relative">
+        <nav className="bg-white/80 backdrop-blur-md shadow-sm">
+          <div className="flex items-center space-x-8 py-3 px-4 max-w-screen-xl mx-auto md:px-8">
+            <div className="flex-none lg:flex-initial">
+              <Link href="/">
+                <span className="text-2xl font-bold bg-gradient-to-r from-red-600 to-blue-600 bg-clip-text text-transparent">
+                  VietQR
+                </span>
+              </Link>
+            </div>
+            <div className="flex-1 flex items-center justify-end">
+              <ul className="hidden md:flex space-x-6">
+                {navigation.map((item, idx) => (
+                  <li key={idx}>
+                    <Link href={item.path} className="block text-gray-700 hover:text-blue-600 transition-colors">
+                      {item.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </header>
+    );
+  }
 
   return (
     <header>
@@ -117,6 +158,4 @@ const Navbar = () => {
       </nav>
     </header>
   );
-};
-
-export default Navbar;
+}

@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import NavLink from './NavLink';
 
-let heroImages = ['/1.png', '/6.png', '/3.png', '/4.png', '/5.png', '/2.png'];
+const heroImages = ['/1.png', '/6.png', '/3.png', '/4.png', '/5.png', '/2.png'];
 
 export default function Hero() {
   return (
@@ -35,11 +35,15 @@ export default function Hero() {
             {heroImages.map((image, idx) => (
               <Image
                 key={idx}
-                alt="image"
+                alt={`QR code mẫu ${idx + 1}`}
                 src={image}
                 width={500}
                 height={500}
                 className="rounded-lg"
+                loading={idx < 2 ? "eager" : "lazy"}
+                priority={idx < 2}
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
               />
             ))}
           </div>
