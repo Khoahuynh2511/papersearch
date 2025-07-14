@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Scientific Paper Search Tool - Search academic papers from ArXiv, CrossRef, and CORE databases">
+    <meta name="keywords" content="scientific papers, research, arxiv, crossref, core, academic search">
+    <meta name="author" content="Paper Search Tool">
+    
+    <!-- SEO and PWA -->
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Paper Search">
+    
+    <!-- Preconnect to external APIs for performance -->
+    <link rel="preconnect" href="https://export.arxiv.org">
+    <link rel="preconnect" href="https://api.crossref.org">
+    <link rel="preconnect" href="https://api.core.ac.uk">
+    
+    <title>Scientific Paper Search Tool</title>
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Theme Toggle -->
+    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1 class="header-title">
+                <i class="fas fa-search"></i>
+                Scientific Paper Search Tool
+            </h1>
+            <p class="header-subtitle">Discover research papers from databases</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            
+            <!-- Search Section -->
+            <section class="search-section" role="search">
+                <div class="search-container">
+                    <!-- Main Search Bar -->
+                    <div class="search-bar-container">
+                        <div class="search-input-wrapper">
+                            <i class="fas fa-search search-icon"></i>
+                            <input 
+                                type="text" 
+                                id="search-input" 
+                                class="search-input" 
+                                placeholder="Enter keywords, authors, or topics..."
+                                autocomplete="off"
+                                aria-label="Search for scientific papers"
+                            >
+                            <button id="clear-search" class="clear-btn" title="Clear search" aria-label="Clear search">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <button id="search-btn" class="search-btn" aria-label="Search">
+                            <i class="fas fa-search"></i>
+                            Search
+                        </button>
+                    </div>
+
+                    <!-- Search Suggestions -->
+                    <div id="search-suggestions" class="search-suggestions" hidden>
+                        <!-- Dynamic suggestions will be inserted here -->
+                    </div>
+
+                    <!-- Recent Searches -->
+                    <div id="recent-searches" class="recent-searches" hidden>
+                        <h4>Recent Searches</h4>
+                        <div class="recent-searches-list">
+                            <!-- Recent searches will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters and Options -->
+                <div class="filters-container">
+                    <div class="filters-row">
+                        <!-- Source Selection -->
+                        <div class="filter-group">
+                            <label for="source-select" class="filter-label">Source:</label>
+                            <select id="source-select" class="filter-select">
+                                <option value="all">All Sources</option>
+                                <option value="arxiv">ArXiv</option>
+                                <option value="crossref">CrossRef</option>
+                                <option value="semantic_scholar">Semantic Scholar</option>
+                                <option value="openalex">OpenAlex</option>
+                                <option value="pubmed">PubMed</option>
+                                <option value="doaj">DOAJ</option>
+                            </select>
+                        </div>
+
+                        <!-- Sort Options -->
+                        <div class="filter-group">
+                            <label for="sort-select" class="filter-label">Sort by:</label>
+                            <select id="sort-select" class="filter-select">
+                                <option value="relevance">Relevance</option>
+                                <option value="date">Publication Date</option>
+                                <option value="citations">Citations</option>
+                                <option value="quality">Quality Score</option>
+                                <option value="impact">Impact Score</option>
+                                <option value="velocity">Citation Velocity</option>
+                                <option value="title">Title</option>
+                            </select>
+                        </div>
+
+
+
+                        <!-- Advanced Filters Toggle -->
+                        <button id="advanced-filters-toggle" class="advanced-toggle">
+                            <i class="fas fa-sliders-h"></i>
+                            Advanced Filters
+                        </button>
+                    </div>
+
+                    <!-- Advanced Filters Panel -->
+                    <div id="advanced-filters" class="advanced-filters" hidden>
+                        <div class="advanced-filters-grid">
+                            <!-- Date Range -->
+                            <div class="filter-group">
+                                <label class="filter-label">Publication Year:</label>
+                                <div class="date-range">
+                                    <input type="number" id="year-from" placeholder="From" min="1900" max="2024" class="date-input">
+                                    <span>to</span>
+                                    <input type="number" id="year-to" placeholder="To" min="1900" max="2024" class="date-input">
+                                </div>
+                            </div>
+
+                            <!-- Author Search -->
+                            <div class="filter-group">
+                                <label for="author-input" class="filter-label">Author:</label>
+                                <input type="text" id="author-input" placeholder="Author name" class="filter-input">
+                            </div>
+
+                            <!-- Subject Categories -->
+                            <div class="filter-group">
+                                <label for="category-select" class="filter-label">Category:</label>
+                                <select id="category-select" class="filter-select">
+                                    <option value="">All Categories</option>
+                                    <option value="cs">Computer Science</option>
+                                    <option value="math">Mathematics</option>
+                                    <option value="physics">Physics</option>
+                                    <option value="bio">Biology</option>
+                                    <option value="econ">Economics</option>
+                                    <option value="stat">Statistics</option>
+                                </select>
+                            </div>
+
+                            <!-- Exact Phrase -->
+                            <div class="filter-group">
+                                <label class="filter-label">
+                                    <input type="checkbox" id="exact-phrase" class="filter-checkbox">
+                                    Exact phrase match
+                                </label>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Filter Actions -->
+                        <div class="filter-actions">
+                            <button id="apply-filters" class="btn btn-primary">Apply Filters</button>
+                            <button id="reset-filters" class="btn btn-secondary">Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Search Tags -->
+            <section class="quick-search-section">
+                <h3>Popular Searches:</h3>
+                <div class="quick-search-tags">
+                    <button class="tag" data-query="machine learning">Machine Learning</button>
+                    <button class="tag" data-query="artificial intelligence">AI</button>
+                    <button class="tag" data-query="deep learning">Deep Learning</button>
+                    <button class="tag" data-query="neural networks">Neural Networks</button>
+                    <button class="tag" data-query="natural language processing">NLP</button>
+                    <button class="tag" data-query="computer vision">Computer Vision</button>
+                    <button class="tag" data-query="quantum computing">Quantum Computing</button>
+                    <button class="tag" data-query="blockchain">Blockchain</button>
+                </div>
+            </section>
+
+            <!-- Loading Spinner -->
+            <div id="loading-spinner" class="loading-spinner" style="display: none;">
+                <div class="spinner"></div>
+                <p>Searching papers across databases...</p>
+            </div>
+
+            <!-- Search Results -->
+            <section id="results-section" class="results-section" style="display: none;">
+                <!-- Results Header -->
+                <div class="results-header">
+                    <div class="results-info">
+                        <h2 id="results-title">Search Results</h2>
+                        <p id="results-count">Found 0 papers</p>
+                    </div>
+                    <div class="results-actions">
+                        <button id="export-csv" class="btn btn-outline">
+                            <i class="fas fa-download"></i>
+                            Export CSV
+                        </button>
+                        <button id="export-json" class="btn btn-outline">
+                            <i class="fas fa-file-code"></i>
+                            Export JSON
+                        </button>
+                        <button id="print-results" class="btn btn-outline">
+                            <i class="fas fa-print"></i>
+                            Print
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results Container -->
+                <div id="results-container" class="results-container">
+                    <!-- Paper cards will be dynamically inserted here -->
+                </div>
+
+                <!-- Pagination -->
+                <div id="pagination-container" class="pagination-container">
+                    <div class="pagination">
+                        <button id="prev-page" class="pagination-btn" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                            Previous
+                        </button>
+                        <div id="page-numbers" class="page-numbers">
+                            <!-- Page numbers will be dynamically inserted -->
+                        </div>
+                        <button id="next-page" class="pagination-btn" disabled>
+                            Next
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="pagination-info">
+                        <span id="pagination-text">Page 1 of 1</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="empty-state" style="display: none;">
+                <div class="empty-state-content">
+                    <i class="fas fa-search empty-state-icon"></i>
+                    <h3>No papers found</h3>
+                    <p>Try adjusting your search terms or filters</p>
+                    <button id="clear-filters-btn" class="btn btn-primary">Clear All Filters</button>
+                </div>
+            </div>
+
+            <!-- Error State -->
+            <div id="error-state" class="error-state" style="display: none;">
+                <div class="error-content">
+                    <i class="fas fa-exclamation-triangle error-icon"></i>
+                    <h3 id="error-title">Search Error</h3>
+                    <p id="error-message">An error occurred while searching. Please try again.</p>
+                    <button id="retry-search" class="btn btn-primary">Retry Search</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bookmarks Modal -->
+    <div id="bookmarks-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Bookmarked Papers</h3>
+                <button id="close-bookmarks" class="modal-close" aria-label="Close bookmarks">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="bookmarks-list" class="bookmarks-list">
+                    <!-- Bookmarked papers will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button for Bookmarks -->
+    <button id="bookmarks-fab" class="fab" title="View Bookmarks" aria-label="View bookmarked papers">
+        <i class="fas fa-bookmark"></i>
+        <span id="bookmark-count" class="bookmark-count" hidden>0</span>
+    </button>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Data Sources</h4>
+                    <ul>
+                        <li><a href="https://arxiv.org/" target="_blank" rel="noopener">ArXiv</a></li>
+                        <li><a href="https://www.crossref.org/" target="_blank" rel="noopener">CrossRef</a></li>
+                        <li><a href="https://www.semanticscholar.org/" target="_blank" rel="noopener">Semantic Scholar</a></li>
+                        <li><a href="https://openalex.org/" target="_blank" rel="noopener">OpenAlex</a></li>
+                        <li><a href="https://pubmed.ncbi.nlm.nih.gov/" target="_blank" rel="noopener">PubMed</a></li>
+                        <li><a href="https://doaj.org/" target="_blank" rel="noopener">DOAJ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Features</h4>
+                    <ul>
+                        <li>Multi-source search</li>
+                        <li>Advanced filtering</li>
+                        <li>Export capabilities</li>
+                        <li>Bookmark papers</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>About</h4>
+                    <p>A free tool for searching scientific papers across multiple academic databases.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Scientific Paper Search Tool from Kai H. Built with ❤️ for researchers.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    
+    <!-- Keyboard shortcuts help -->
+    <div id="shortcuts-help" class="shortcuts-help" hidden>
+        <div class="shortcuts-content">
+            <h4>Keyboard Shortcuts</h4>
+            <ul>
+                <li><kbd>Ctrl/Cmd + /</kbd> - Focus search</li>
+                <li><kbd>Enter</kbd> - Search</li>
+                <li><kbd>Esc</kbd> - Clear search</li>
+                <li><kbd>Ctrl/Cmd + K</kbd> - Open shortcuts</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
